@@ -21,19 +21,21 @@ CREATE TABLE User (
     username CHAR(20) NOT NULL UNIQUE
 );
 
-CREATE TABLE `pairbasedchatroom`.`Category` (
+#Create Categories Table
+CREATE TABLE `pairbasedchatroom`.`Categories` (
   `uuid` INT NOT NULL,
   `categoryName` TINYTEXT NOT NULL,
   PRIMARY KEY (`uuid`),
   UNIQUE INDEX `uuid_UNIQUE` (`uuid` ASC));
 
-ALTER TABLE `pairbasedchatroom`.`Category` 
+#Add foreign key for parentCategory
+ALTER TABLE `pairbasedchatroom`.`Categories` 
 ADD COLUMN `parentCategory` INT NULL AFTER `categoryName`,
 ADD INDEX `parentCategory_idx` (`parentCategory` ASC);
-ALTER TABLE `pairbasedchatroom`.`Category` 
+ALTER TABLE `pairbasedchatroom`.`Categories` 
 ADD CONSTRAINT `parentCategory`
   FOREIGN KEY (`parentCategory`)
-  REFERENCES `pairbasedchatroom`.`Category` (`uuid`)
+  REFERENCES `pairbasedchatroom`.`Categories` (`uuid`)
   ON DELETE CASCADE
   ON UPDATE CASCADE;
   
