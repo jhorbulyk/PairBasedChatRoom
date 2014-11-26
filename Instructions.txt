@@ -1,0 +1,2 @@
+To run the script, enter this at the MySQL prompt:
+source DatabaseInitializationScript.sql;
