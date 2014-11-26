@@ -21,8 +21,8 @@ CREATE TABLE User (
     username CHAR(20) NOT NULL UNIQUE
 );
 
-#Create Topic Table
-CREATE TABLE `pairbasedchatroom`.`Topic` (
+#Create Topics Table
+CREATE TABLE `pairbasedchatroom`.`Topics` (
   `uuid` INT NOT NULL,
   `topicTitle` TINYTEXT NOT NULL,
   `positionAStatement` TINYTEXT NOT NULL,
@@ -30,13 +30,13 @@ CREATE TABLE `pairbasedchatroom`.`Topic` (
   PRIMARY KEY (`uuid`),
   UNIQUE INDEX `uuid_UNIQUE` (`uuid` ASC));
   
-#Add Foreign Key
-ALTER TABLE `pairbasedchatroom`.`Topic` 
-ADD COLUMN `category.uuid` INT NULL AFTER `positionBStatement`,
-ADD INDEX `category.uuid_idx` (`category.uuid` ASC);
-ALTER TABLE `pairbasedchatroom`.`Topic` 
-ADD CONSTRAINT `category.uuid`
- FOREIGN KEY (`category.uuid`)
- REFERENCES `pairbasedchatroom`.`Category` (`uuid`)
+#Add Foreign Key for category
+ALTER TABLE `pairbasedchatroom`.`Topics` 
+ADD COLUMN `categories.uuid` INT NULL AFTER `positionBStatement`,
+ADD INDEX `categories.uuid_idx` (`categories.uuid` ASC);
+ALTER TABLE `pairbasedchatroom`.`Topics` 
+ADD CONSTRAINT `categories.uuid`
+ FOREIGN KEY (`categories.uuid`)
+ REFERENCES `pairbasedchatroom`.`Categories` (`uuid`)
  ON DELETE NO ACTION
  ON UPDATE NO ACTION;
