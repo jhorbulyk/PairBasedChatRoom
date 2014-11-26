@@ -1,2 +1,6 @@
 To run the script, enter this at the MySQL prompt:
 source DatabaseInitializationScript.sql;
+
+Capitalization conventions:
+TableNames -> Capitalize the start of each word
+columnNames -> Camel case
