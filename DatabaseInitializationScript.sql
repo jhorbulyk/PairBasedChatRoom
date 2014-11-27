@@ -21,3 +21,22 @@ CREATE TABLE User (
     username CHAR(20) NOT NULL UNIQUE
 );
 
+#Create Topics Table
+CREATE TABLE `pairbasedchatroom`.`Topics` (
+  `uuid` INT NOT NULL,
+  `topicTitle` TINYTEXT NOT NULL,
+  `positionAStatement` TINYTEXT NOT NULL,
+  `positionBStatement` TINYTEXT NOT NULL,
+  PRIMARY KEY (`uuid`),
+  UNIQUE INDEX `uuid_UNIQUE` (`uuid` ASC));
+  
+#Add Foreign Key for category
+ALTER TABLE `pairbasedchatroom`.`Topics` 
+ADD COLUMN `categories.uuid` INT NULL AFTER `positionBStatement`,
+ADD INDEX `categories.uuid_idx` (`categories.uuid` ASC);
+ALTER TABLE `pairbasedchatroom`.`Topics` 
+ADD CONSTRAINT `categories.uuid`
+ FOREIGN KEY (`categories.uuid`)
+ REFERENCES `pairbasedchatroom`.`Categories` (`uuid`)
+ ON DELETE NO ACTION
+ ON UPDATE NO ACTION;
