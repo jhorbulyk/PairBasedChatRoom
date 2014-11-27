@@ -37,3 +37,27 @@ CREATE TABLE Posts (
     PRIMARY KEY (conversation, creationTime, postedBySideA),
     FOREIGN KEY (conversation) REFERENCES Conversations(uuid)
 );
+
+######################################################
+# Create the Categories table
+#######################################################
+
+DROP TABLE IF EXISTS Categories;
+
+CREATE TABLE Categories (
+  uuid BIGINT NOT NULL,
+  name VARCHAR(255) NOT NULL,
+  PRIMARY KEY (uuid),
+  UNIQUE INDEX uuidIdx(uuid ASC));
+
+#Add foreign key for parentCategory
+ALTER TABLE Categories
+ADD COLUMN parent BIGINT NULL,
+ADD INDEX parentIdx (parent ASC);
+ALTER TABLE Categories
+ADD CONSTRAINT parent
+  FOREIGN KEY (parent)
+  REFERENCES Categories(uuid)
+  ON DELETE CASCADE
+  ON UPDATE CASCADE;
+
