@@ -13,3 +13,4 @@ Default types:
 Booleans -> BOOL
 UUID -> BIGINT
 Short length texts -> VARCHAR(255)
+Larger text blocks -> VARCHAR(MAX)
