@@ -10,64 +10,84 @@ CREATE DATABASE PairBasedChatRoom;
 USE PairBasedChatRoom;
 
 ######################################################
+# User defined helper functions for validation
+######################################################
+
+# Generate UUID if none has been specified
+DELIMITER //
+CREATE FUNCTION GetOrUseUUID (uuid BIGINT) 
+    RETURNS BIGINT
+BEGIN
+    # Generate UUID if not created
+    IF (uuid = 0) THEN
+        RETURN UUID_SHORT();
+    END IF;
+    RETURN uuid;
+END;
+//
+DELIMITER ;
+
+# Ensure string is non-empty
+DELIMITER //
+CREATE PROCEDURE EnsureNonEmpty (string VARCHAR(20), message VARCHAR(255))
+BEGIN
+    If (LENGTH(string) = 0) THEN
+        SIGNAL SQLSTATE '45000' 
+            SET MESSAGE_TEXT = message;
+    END IF; 
+END;
+//
+DELIMITER ;
+
+######################################################
 # Create the tables and constraint based triggers
 #######################################################
 
 # Create the USERS table
 CREATE TABLE Users (
     uuid BIGINT NOT NULL UNIQUE PRIMARY KEY,
-    email CHAR(20) NOT NULL UNIQUE,
-    password CHAR(20) NOT NULL,
-    username CHAR(20) NOT NULL UNIQUE
+    email VARCHAR(20) NOT NULL UNIQUE,
+    password VARCHAR(20) NOT NULL,
+    username VARCHAR(20) NOT NULL UNIQUE
 );
 
 # Triggers to handle integrety constraints on updates and insertions
 # Creation
+
 DELIMITER //
-CREATE TRIGGER NewUser BEFORE INSERT ON Users
-FOR EACH ROW
-BEGIN 
-    # Generate UUID if not created
-    IF (NEW.uuid = 0) THEN
-        SET NEW.uuid = UUID_SHORT();
-    END IF;
+CREATE PROCEDURE ValidateUser (email VARCHAR(20), password VARCHAR(20), username VARCHAR(20))
+BEGIN
     # Reject empty passwords
-    If (LENGTH(NEW.password) = 0) THEN
-        SIGNAL SQLSTATE '45000' 
-            SET MESSAGE_TEXT = 'Password can not be empty.';
-    END IF; 
-    # Reject empty usernames
-    If (LENGTH(NEW.username) = 0) THEN
-        SIGNAL SQLSTATE '45000' 
-            SET MESSAGE_TEXT = 'Username can not be empty.';
-    END IF; 
+    CALL EnsureNonEmpty(password, 'Password can not be empty.');
+    
+    # Reject empty usernames 
+    CALL EnsureNonEmpty(username, 'Username can not be empty.');
+    
     # The email address must be valid
-    IF(NEW.email NOT REGEXP '^[[:alnum:]]+@[[:alpha:]]+[[.full-stop.]][[:alpha:]]{2,3}$') THEN
+    IF(email NOT REGEXP '^[[:alnum:]]+@[[:alpha:]]+[[.full-stop.]][[:alpha:]]{2,3}$') THEN
         SIGNAL SQLSTATE '45000' 
             SET MESSAGE_TEXT = 'Email is not valid.';
     END IF;
 END;
+//
+DELIMITER ;
 
-# Ensure validity
-CREATE PROCEDURE validateUser(password
-CREATE TRIGGER NewUser BEFORE INSERT ON Users
+DELIMITER //
+CREATE TRIGGER CreateNewUser BEFORE INSERT ON Users
 FOR EACH ROW
 BEGIN 
-    # Reject empty passwords
-    If (LENGTH(NEW.password) = 0) THEN
-        SIGNAL SQLSTATE '45000' 
-            SET MESSAGE_TEXT = 'Password can not be empty.';
-    END IF; 
-    # Reject empty usernames
-    If (LENGTH(NEW.username) = 0) THEN
-        SIGNAL SQLSTATE '45000' 
-            SET MESSAGE_TEXT = 'Username can not be empty.';
-    END IF; 
-    # The email address must be valid
-    IF(NEW.email NOT REGEXP '^[[:alnum:]]+@[[:alpha:]]+[[.full-stop.]][[:alpha:]]{2,3}$') THEN
-        SIGNAL SQLSTATE '45000' 
-            SET MESSAGE_TEXT = 'Email is not valid.';
-    END IF;
+    SET NEW.uuid = GetOrUseUUID(NEW.uuid);
+    CALL ValidateUser(NEW.email, NEW.password, NEW.username);
+END;
+//
+DELIMITER ;
+
+# Ensure validity
+DELIMITER //
+CREATE TRIGGER UpdateUser BEFORE UPDATE ON Users
+FOR EACH ROW
+BEGIN 
+    CALL ValidateUser(NEW.email, NEW.password, NEW.username);
 END;
 //
 DELIMITER ;
