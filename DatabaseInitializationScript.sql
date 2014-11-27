@@ -35,7 +35,8 @@ CREATE TABLE Posts (
     seenByOtherUser BOOL NOT NULL DEFAULT 0,
     flaggedAsAbusive BOOL NOT NULL DEFAULT 0,
     PRIMARY KEY (conversation, creationTime, postedBySideA),
-    FOREIGN KEY (conversation) REFERENCES Conversations(uuid)
+    FOREIGN KEY (conversation) REFERENCES Conversations(uuid) 
+        MATCH FULL ON UPDATE CASCADE ON DELETE CASCADE
 );
 
 ######################################################
