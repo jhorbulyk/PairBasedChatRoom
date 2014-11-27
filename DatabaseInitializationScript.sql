@@ -21,3 +21,19 @@ CREATE TABLE User (
     username CHAR(20) NOT NULL UNIQUE
 );
 
+# Dummy conversation table
+CREATE TABLE Conversations (
+    uuid BIGINT PRIMARY KEY
+);
+
+# Create the posts table
+CREATE TABLE Posts (
+    conversation BIGINT NOT NULL,
+    creationTime TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    postContent TEXT NOT NULL,
+    postedBySideA BOOL NOT NULL,
+    seenByOtherUser BOOL NOT NULL DEFAULT 0,
+    flaggedAsAbusive BOOL NOT NULL DEFAULT 0,
+    PRIMARY KEY (conversation, creationTime, postedBySideA),
+    FOREIGN KEY (conversation) REFERENCES Conversations(uuid)
+);
