@@ -1,2 +1,15 @@
 To run the script, enter this at the MySQL prompt:
 source DatabaseInitializationScript.sql;
+
+Conventions:
+Table names 
+  -> Capitalize the start of each word (ie TableNames)
+  -> Make them plural
+
+Column names (Attributes) 
+  -> Lower camel case (ie. columnNames)
+  
+Default types:
+Booleans -> BOOL
+UUID -> BIGINT
+Short length texts -> VARCHAR(255)
