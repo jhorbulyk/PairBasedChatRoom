@@ -8,3 +8,8 @@ Table names
 
 Column names (Attributes) 
   -> Lower camel case (ie. columnNames)
+  
+Default types:
+Booleans -> BOOL
+UUID -> BIGINT
+Short length texts -> VARCHAR(255)
