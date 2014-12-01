@@ -84,3 +84,19 @@ CREATE TABLE SuggestionToChanges (
         REFERENCES Categories (uuid)
         ON DELETE CASCADE ON UPDATE CASCADE
 );
+# Create the UserVotes table
+CREATE TABLE UserVotes (
+    user BIGINT NOT NULL,
+    suggestionToChange BIGINT NOT NULL,
+    voteDirection BOOL NOT NULL,
+    PRIMARY KEY (user , suggestionToChange)
+);
+ALTER TABLE UserVotes
+  ADD CONSTRAINT suggestionToChangeFk FOREIGN KEY (suggestionToChange)
+  REFERENCES SuggestionToChanges(uuid)
+  ON DELETE NO ACTION ON UPDATE NO ACTION, 
+  ADD CONSTRAINT userFk FOREIGN KEY (user)
+  REFERENCES Users(uuid)
+  ON DELETE NO ACTION  ON UPDATE NO ACTION,
+  ADD INDEX suggestionToChangeFk (suggestionToChange ASC),
+  ADD INDEX userFk (user ASC);
