@@ -69,3 +69,18 @@ ADD CONSTRAINT category
  REFERENCES Categories(uuid)
  ON DELETE CASCADE
  ON UPDATE CASCADE;
+# Create the SuggestionToChange table
+CREATE TABLE SuggestionToChanges (
+    uuid BIGINT NOT NULL PRIMARY KEY,
+    categoryToChange BIGINT NOT NULL,
+    newParent BIGINT NOT NULL,
+    votesFavor INT NOT NULL,
+    votesAgainst INT NOT NULL,
+    votesTotal INT NOT NULL,
+    CONSTRAINT itemToMove FOREIGN KEY (uuid)
+        REFERENCES Categories (uuid)
+        ON DELETE CASCADE ON UPDATE CASCADE,
+    CONSTRAINT newCategory FOREIGN KEY (uuid)
+        REFERENCES Categories (uuid)
+        ON DELETE CASCADE ON UPDATE CASCADE
+);
