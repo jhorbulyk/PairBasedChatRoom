@@ -20,27 +20,36 @@ CREATE TABLE User (
     password CHAR(20) NOT NULL,
     username CHAR(20) NOT NULL UNIQUE
 );
-
-######################################################
 # Create the Categories table
-#######################################################
-
-DROP TABLE IF EXISTS Categories;
-
 CREATE TABLE Categories (
-  uuid BIGINT NOT NULL,
-  name VARCHAR(255) NOT NULL,
-  PRIMARY KEY (uuid),
-  UNIQUE INDEX uuidIdx(uuid ASC));
-
+    uuid BIGINT NOT NULL,
+    name VARCHAR(255) NOT NULL,
+    PRIMARY KEY (uuid),
+    UNIQUE INDEX uuidIdx (uuid ASC)
+);
 #Add foreign key for parentCategory
-ALTER TABLE Categories
-ADD COLUMN parent BIGINT NULL,
+ALTER TABLE Categories 
+ADD COLUMN parent BIGINT NOT NULL,
 ADD INDEX parentIdx (parent ASC);
-ALTER TABLE Categories
+ALTER TABLE Categories 
 ADD CONSTRAINT parent
-  FOREIGN KEY (parent)
-  REFERENCES Categories(uuid)
-  ON DELETE CASCADE
-  ON UPDATE CASCADE;
-
+ FOREIGN KEY (parent)
+ REFERENCES Categories(uuid)
+ ON DELETE CASCADE
+ ON UPDATE CASCADE;
+# Create the Topics table
+CREATE TABLE Topics (
+    category BIGINT NOT NULL,
+    statementA TEXT NOT NULL,
+    statementB TEXT NOT NULL,
+    PRIMARY KEY (category)
+);
+#Add foreign key for category
+ALTER TABLE Topics
+ ADD INDEX category (category ASC);
+ALTER TABLE Topics 
+ADD CONSTRAINT category
+ FOREIGN KEY (category)
+ REFERENCES Categories(uuid)
+ ON DELETE CASCADE
+ ON UPDATE CASCADE;
