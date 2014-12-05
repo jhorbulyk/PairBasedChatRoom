@@ -37,31 +37,6 @@ CREATE TABLE Users (
     username VARCHAR(20) NOT NULL UNIQUE
 );
 
-# Create the ConversationsViewedByUserTracker Tabe
-CREATE TABLE ConversationsViewedByUserTracker (
-    user BIGINT NOT NULL,
-    conversation BIGINT NOT NULL,
-    timeConversationWasViewed TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
-    PRIMARY KEY (user, conversation, timeConversationWasViewed),
-    FOREIGN KEY (user) REFERENCES Users(id)
-        MATCH FULL ON UPDATE CASCADE ON DELETE CASCADE,
-    FOREIGN KEY (conversation) REFERENCES Conversations(id)
-        MATCH FULL ON UPDATE CASCADE ON DELETE CASCADE
-);
-
-# Create the posts table
-CREATE TABLE Posts (
-    conversation BIGINT NOT NULL,
-    creationTime TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
-    postContent TEXT NOT NULL,
-    postedBySideA BOOL NOT NULL,
-    seenByOtherUser BOOL NOT NULL DEFAULT 0,
-    flaggedAsAbusive BOOL NOT NULL DEFAULT 0,
-    PRIMARY KEY (conversation, creationTime, postedBySideA),
-    FOREIGN KEY (conversation) REFERENCES Conversations(id) 
-        MATCH FULL ON UPDATE CASCADE ON DELETE CASCADE
-);
-
 ######################################################
 # Create the Categories table
 #######################################################
@@ -156,6 +131,31 @@ CREATE TABLE Conversations(
     FOREIGN KEY (topic) REFERENCES Topics(category),
     FOREIGN KEY (positionAUser) REFERENCES Users(id),
 	FOREIGN KEY (positionBUser) REFERENCES Users(id)
+);
+
+# Create the ConversationsViewedByUserTracker Tabe
+CREATE TABLE ConversationsViewedByUserTracker (
+    user BIGINT NOT NULL,
+    conversation BIGINT NOT NULL,
+    timeConversationWasViewed TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    PRIMARY KEY (user, conversation, timeConversationWasViewed),
+    FOREIGN KEY (user) REFERENCES Users(id)
+        MATCH FULL ON UPDATE CASCADE ON DELETE CASCADE,
+    FOREIGN KEY (conversation) REFERENCES Conversations(id)
+        MATCH FULL ON UPDATE CASCADE ON DELETE CASCADE
+);
+
+# Create the posts table
+CREATE TABLE Posts (
+    conversation BIGINT NOT NULL,
+    creationTime TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    postContent TEXT NOT NULL,
+    postedBySideA BOOL NOT NULL,
+    seenByOtherUser BOOL NOT NULL DEFAULT 0,
+    flaggedAsAbusive BOOL NOT NULL DEFAULT 0,
+    PRIMARY KEY (conversation, creationTime, postedBySideA),
+    FOREIGN KEY (conversation) REFERENCES Conversations(id) 
+        MATCH FULL ON UPDATE CASCADE ON DELETE CASCADE
 );
 
 ######################################################
