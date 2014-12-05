@@ -148,8 +148,8 @@ CREATE TABLE ChangeComments(
     postedBy BIGINT NOT NULL,
     flaggedAsAbusive BOOL NOT NULL DEFAULT 0,
     PRIMARY KEY (suggestionToChangeConversation, creationTime),
-    FOREIGN KEY (suggestionToChangeConversation) REFERENCES SuggestionToChange(uuid)
-        MATCH FULL ON UPDATE CASCADE ON DELETE CASCADE
+    FOREIGN KEY (suggestionToChangeConversation) REFERENCES SuggestionToChanges(uuid)
+        MATCH FULL ON UPDATE CASCADE ON DELETE CASCADE,
     FOREIGN KEY (postedBy) REFERENCES Users(uuid)
         MATCH FULL ON UPDATE CASCADE ON DELETE CASCADE
 );
