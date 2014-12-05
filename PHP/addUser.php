@@ -1,11 +1,15 @@
 <?php
+    session_start();
+?>
+
+<?php
 
 //connecting to the database 
 function connectDB() {
     $servername = "localhost";
 	$username = "root";
 	$password = "tester";
-	$dbname = "pairbasedchatroom";
+	$dbname = "PairBasedChatRoom";
 
 	// Create connection
 	$conn = new mysqli($servername, $username, $password, $dbname);
@@ -22,6 +26,7 @@ $sql = "INSERT INTO Users (password, email,username)
 VALUES ('Simon','sluo@hotmail.com','sluo')";
 
 if ($conn->query($sql) === TRUE) {
+    $_SESSION["userId"] = $conn->insert_id;
     echo "New record created successfully";
 } else {
     echo "Error: " . $sql . "<br>" . $conn->error;
