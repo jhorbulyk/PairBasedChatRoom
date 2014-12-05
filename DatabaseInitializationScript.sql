@@ -40,7 +40,7 @@ END;
 DELIMITER ;
 
 ######################################################
-# Create the tables and constraint based triggers
+# Create the tables
 #######################################################
 
 # Create the USERS table
@@ -51,46 +51,6 @@ CREATE TABLE Users (
     username VARCHAR(20) NOT NULL UNIQUE
 );
 
-# Triggers to handle integrety constraints on updates and insertions
-# Creation
-
-DELIMITER //
-CREATE PROCEDURE ValidateUser (email VARCHAR(20), password VARCHAR(20), username VARCHAR(20))
-BEGIN
-    # Reject empty passwords
-    CALL EnsureNonEmpty(password, 'Password can not be empty.');
-    
-    # Reject empty usernames 
-    CALL EnsureNonEmpty(username, 'Username can not be empty.');
-    
-    # The email address must be valid
-    IF(email NOT REGEXP '^[[:alnum:]]+@[[:alpha:]]+[[.full-stop.]][[:alpha:]]{2,3}$') THEN
-        SIGNAL SQLSTATE '45000' 
-            SET MESSAGE_TEXT = 'Email is not valid.';
-    END IF;
-END;
-//
-DELIMITER ;
-
-DELIMITER //
-CREATE TRIGGER CreateNewUser BEFORE INSERT ON Users
-FOR EACH ROW
-BEGIN 
-    SET NEW.uuid = GetOrUseUUID(NEW.uuid);
-    CALL ValidateUser(NEW.email, NEW.password, NEW.username);
-END;
-//
-DELIMITER ;
-
-# Ensure validity
-DELIMITER //
-CREATE TRIGGER UpdateUser BEFORE UPDATE ON Users
-FOR EACH ROW
-BEGIN 
-    CALL ValidateUser(NEW.email, NEW.password, NEW.username);
-END;
-//
-DELIMITER ;
 
 # Create the Categories table
 CREATE TABLE Categories (
@@ -172,3 +132,47 @@ ALTER TABLE UserVotes
   ON DELETE NO ACTION  ON UPDATE NO ACTION,
   ADD INDEX suggestionToChangeFk (suggestionToChange ASC),
   ADD INDEX userFk (user ASC);
+
+######################################################
+# Triggers to handle integrety constraints on updates and insertions
+######################################################
+
+# Ensure validity
+DELIMITER //
+CREATE PROCEDURE ValidateUser (email VARCHAR(20), password VARCHAR(20), username VARCHAR(20))
+BEGIN
+    # Reject empty passwords
+    CALL EnsureNonEmpty(password, 'Password can not be empty.');
+    
+    # Reject empty usernames 
+    CALL EnsureNonEmpty(username, 'Username can not be empty.');
+    
+    # The email address must be valid
+    IF(email NOT REGEXP '^[[:alnum:]]+@[[:alpha:]]+[[.full-stop.]][[:alpha:]]{2,3}$') THEN
+        SIGNAL SQLSTATE '45000' 
+            SET MESSAGE_TEXT = 'Email is not valid.';
+    END IF;
+END;
+//
+DELIMITER ;
+
+# On Creation
+DELIMITER //
+CREATE TRIGGER CreateNewUser BEFORE INSERT ON Users
+FOR EACH ROW
+BEGIN 
+    SET NEW.uuid = GetOrUseUUID(NEW.uuid);
+    CALL ValidateUser(NEW.email, NEW.password, NEW.username);
+END;
+//
+DELIMITER ;
+
+# On update.
+DELIMITER //
+CREATE TRIGGER UpdateUser BEFORE UPDATE ON Users
+FOR EACH ROW
+BEGIN 
+    CALL ValidateUser(NEW.email, NEW.password, NEW.username);
+END;
+//
+DELIMITER ;
