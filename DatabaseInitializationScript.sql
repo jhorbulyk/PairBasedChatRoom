@@ -91,3 +91,84 @@ BEGIN
 END;
 //
 DELIMITER ;
+
+# Create the Categories table
+CREATE TABLE Categories (
+    uuid BIGINT NOT NULL,
+    name VARCHAR(255) NOT NULL,
+    PRIMARY KEY (uuid),
+    UNIQUE INDEX uuidIdx (uuid ASC)
+);
+#Add foreign key for parentCategory
+ALTER TABLE Categories 
+ADD COLUMN parent BIGINT NOT NULL,
+ADD INDEX parentIdx (parent ASC);
+ALTER TABLE Categories 
+ADD CONSTRAINT parent
+ FOREIGN KEY (parent)
+ REFERENCES Categories(uuid)
+ ON DELETE CASCADE
+ ON UPDATE CASCADE;
+# Create the Topics table
+CREATE TABLE Topics (
+    category BIGINT NOT NULL,
+    statementA TEXT NOT NULL,
+    statementB TEXT NOT NULL,
+    PRIMARY KEY (category)
+);
+#Add foreign key for category
+ALTER TABLE Topics
+ ADD INDEX category (category ASC);
+ALTER TABLE Topics 
+ADD CONSTRAINT category
+ FOREIGN KEY (category)
+ REFERENCES Categories(uuid)
+ ON DELETE CASCADE
+ ON UPDATE CASCADE;
+# Create the Topics table
+CREATE TABLE Topics (
+    category BIGINT NOT NULL,
+    statementA TEXT NOT NULL,
+    statementB TEXT NOT NULL,
+    PRIMARY KEY (category)
+);
+#Add foreign key for category in Topics
+ALTER TABLE Topics
+ ADD INDEX category (category ASC);
+ALTER TABLE Topics 
+ADD CONSTRAINT category
+ FOREIGN KEY (category)
+ REFERENCES Categories(uuid)
+ ON DELETE CASCADE
+ ON UPDATE CASCADE;
+# Create the SuggestionToChange table
+CREATE TABLE SuggestionToChanges (
+    uuid BIGINT NOT NULL PRIMARY KEY,
+    categoryToChange BIGINT NOT NULL,
+    newParent BIGINT NOT NULL,
+    votesFavor INT NOT NULL,
+    votesAgainst INT NOT NULL,
+    votesTotal INT NOT NULL,
+    CONSTRAINT itemToMove FOREIGN KEY (uuid)
+        REFERENCES Categories (uuid)
+        ON DELETE CASCADE ON UPDATE CASCADE,
+    CONSTRAINT newCategory FOREIGN KEY (uuid)
+        REFERENCES Categories (uuid)
+        ON DELETE CASCADE ON UPDATE CASCADE
+);
+# Create the UserVotes table
+CREATE TABLE UserVotes (
+    user BIGINT NOT NULL,
+    suggestionToChange BIGINT NOT NULL,
+    voteDirection BOOL NOT NULL,
+    PRIMARY KEY (user , suggestionToChange)
+);
+ALTER TABLE UserVotes
+  ADD CONSTRAINT suggestionToChangeFk FOREIGN KEY (suggestionToChange)
+  REFERENCES SuggestionToChanges(uuid)
+  ON DELETE NO ACTION ON UPDATE NO ACTION, 
+  ADD CONSTRAINT userFk FOREIGN KEY (user)
+  REFERENCES Users(uuid)
+  ON DELETE NO ACTION  ON UPDATE NO ACTION,
+  ADD INDEX suggestionToChangeFk (suggestionToChange ASC),
+  ADD INDEX userFk (user ASC);
