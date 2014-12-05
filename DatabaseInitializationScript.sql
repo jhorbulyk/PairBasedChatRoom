@@ -37,11 +37,6 @@ CREATE TABLE Users (
     username VARCHAR(20) NOT NULL UNIQUE
 );
 
-# Dummy conversation table
-CREATE TABLE Conversations (
-    id BIGINT AUTO_INCREMENT PRIMARY KEY
-);
-
 # Create the ConversationsViewedByUserTracker Tabe
 CREATE TABLE ConversationsViewedByUserTracker (
     user BIGINT NOT NULL,
