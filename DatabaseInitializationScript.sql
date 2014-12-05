@@ -13,20 +13,6 @@ USE PairBasedChatRoom;
 # User defined helper functions for validation
 ######################################################
 
-# Generate UUID if none has been specified
-DELIMITER //
-CREATE FUNCTION GetOrUseUUID (uuid BIGINT) 
-    RETURNS BIGINT
-BEGIN
-    # Generate UUID if not created
-    IF (uuid = 0) THEN
-        RETURN UUID_SHORT();
-    END IF;
-    RETURN uuid;
-END;
-//
-DELIMITER ;
-
 # Ensure string is non-empty
 DELIMITER //
 CREATE PROCEDURE EnsureNonEmpty (string VARCHAR(20), message VARCHAR(255))
@@ -45,7 +31,7 @@ DELIMITER ;
 
 # Create the USERS table
 CREATE TABLE Users (
-    uuid BIGINT NOT NULL UNIQUE PRIMARY KEY,
+    id BIGINT NOT NULL UNIQUE AUTO_INCREMENT PRIMARY KEY,
     email VARCHAR(20) NOT NULL UNIQUE,
     password VARCHAR(20) NOT NULL,
     username VARCHAR(20) NOT NULL UNIQUE
@@ -53,7 +39,7 @@ CREATE TABLE Users (
 
 # Dummy conversation table
 CREATE TABLE Conversations (
-    uuid BIGINT PRIMARY KEY
+    id BIGINT AUTO_INCREMENT PRIMARY KEY
 );
 
 # Create the ConversationsViewedByUserTracker Tabe
@@ -62,9 +48,9 @@ CREATE TABLE ConversationsViewedByUserTracker (
     conversation BIGINT NOT NULL,
     timeConversationWasViewed TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
     PRIMARY KEY (user, conversation, timeConversationWasViewed),
-    FOREIGN KEY (user) REFERENCES Users(uuid)
+    FOREIGN KEY (user) REFERENCES Users(id)
         MATCH FULL ON UPDATE CASCADE ON DELETE CASCADE,
-    FOREIGN KEY (conversation) REFERENCES Conversations(uuid)
+    FOREIGN KEY (conversation) REFERENCES Conversations(id)
         MATCH FULL ON UPDATE CASCADE ON DELETE CASCADE
 );
 
@@ -77,7 +63,7 @@ CREATE TABLE Posts (
     seenByOtherUser BOOL NOT NULL DEFAULT 0,
     flaggedAsAbusive BOOL NOT NULL DEFAULT 0,
     PRIMARY KEY (conversation, creationTime, postedBySideA),
-    FOREIGN KEY (conversation) REFERENCES Conversations(uuid) 
+    FOREIGN KEY (conversation) REFERENCES Conversations(id) 
         MATCH FULL ON UPDATE CASCADE ON DELETE CASCADE
 );
 
@@ -89,10 +75,10 @@ DROP TABLE IF EXISTS Categories;
 
 # Create the Categories table
 CREATE TABLE Categories (
-    uuid BIGINT NOT NULL,
+    id BIGINT NOT NULL AUTO_INCREMENT ,
     name VARCHAR(255) NOT NULL,
-    PRIMARY KEY (uuid),
-    UNIQUE INDEX uuidIdx (uuid ASC)
+    PRIMARY KEY (id),
+    UNIQUE INDEX idIdx (id ASC)
 );
 #Add foreign key for parentCategory
 ALTER TABLE Categories 
@@ -101,7 +87,7 @@ ADD INDEX parentIdx (parent ASC);
 ALTER TABLE Categories 
 ADD CONSTRAINT parent
  FOREIGN KEY (parent)
- REFERENCES Categories(uuid)
+ REFERENCES Categories(id)
  ON DELETE CASCADE
  ON UPDATE CASCADE;
 # Create the Topics table
@@ -117,37 +103,37 @@ ALTER TABLE Topics
 ALTER TABLE Topics 
 ADD CONSTRAINT category
  FOREIGN KEY (category)
- REFERENCES Categories(uuid)
+ REFERENCES Categories(id)
  ON DELETE CASCADE
  ON UPDATE CASCADE;
 # Create the SuggestionToChange table
 CREATE TABLE SuggestionToChanges (
-    uuid BIGINT NOT NULL PRIMARY KEY,
+    id BIGINT NOT NULL PRIMARY KEY AUTO_INCREMENT,
     categoryToChange BIGINT NOT NULL,
     newParent BIGINT NOT NULL,
     votesFavor INT NOT NULL,
     votesAgainst INT NOT NULL,
     votesTotal INT NOT NULL,
-    CONSTRAINT itemToMove FOREIGN KEY (uuid)
-        REFERENCES Categories (uuid)
+    CONSTRAINT itemToMove FOREIGN KEY (id)
+        REFERENCES Categories (id)
         ON DELETE CASCADE ON UPDATE CASCADE,
-    CONSTRAINT newCategory FOREIGN KEY (uuid)
-        REFERENCES Categories (uuid)
+    CONSTRAINT newCategory FOREIGN KEY (id)
+        REFERENCES Categories (id)
         ON DELETE CASCADE ON UPDATE CASCADE
 );
 # Create the UserVotes table
 CREATE TABLE UserVotes (
-    user BIGINT NOT NULL,
+    user BIGINT NOT NULL AUTO_INCREMENT,
     suggestionToChange BIGINT NOT NULL,
     voteDirection BOOL NOT NULL,
     PRIMARY KEY (user , suggestionToChange)
 );
 ALTER TABLE UserVotes
   ADD CONSTRAINT suggestionToChangeFk FOREIGN KEY (suggestionToChange)
-  REFERENCES SuggestionToChanges(uuid)
+  REFERENCES SuggestionToChanges(id)
   ON DELETE NO ACTION ON UPDATE NO ACTION, 
   ADD CONSTRAINT userFk FOREIGN KEY (user)
-  REFERENCES Users(uuid)
+  REFERENCES Users(id)
   ON DELETE NO ACTION  ON UPDATE NO ACTION,
   ADD INDEX suggestionToChangeFk (suggestionToChange ASC),
   ADD INDEX userFk (user ASC);
@@ -160,9 +146,9 @@ CREATE TABLE ChangeComments(
     postedBy BIGINT NOT NULL,
     flaggedAsAbusive BOOL NOT NULL DEFAULT 0,
     PRIMARY KEY (suggestionToChangeConversation, creationTime),
-    FOREIGN KEY (suggestionToChangeConversation) REFERENCES SuggestionToChanges(uuid)
+    FOREIGN KEY (suggestionToChangeConversation) REFERENCES SuggestionToChanges(id)
         MATCH FULL ON UPDATE CASCADE ON DELETE CASCADE,
-    FOREIGN KEY (postedBy) REFERENCES Users(uuid)
+    FOREIGN KEY (postedBy) REFERENCES Users(id)
         MATCH FULL ON UPDATE CASCADE ON DELETE CASCADE
 );
 
@@ -194,7 +180,6 @@ DELIMITER //
 CREATE TRIGGER CreateNewUser BEFORE INSERT ON Users
 FOR EACH ROW
 BEGIN 
-    SET NEW.uuid = GetOrUseUUID(NEW.uuid);
     CALL ValidateUser(NEW.email, NEW.password, NEW.username);
 END;
 //
