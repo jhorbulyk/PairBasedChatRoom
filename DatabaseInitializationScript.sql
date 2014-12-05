@@ -56,6 +56,18 @@ CREATE TABLE Conversations (
     uuid BIGINT PRIMARY KEY
 );
 
+# Create the ConversationsViewedByUserTracker Tabe
+CREATE TABLE ConversationsViewedByUserTracker (
+    user BIGINT NOT NULL,
+    conversation BIGINT NOT NULL,
+    timeConversationWasViewed TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    PRIMARY KEY (user, conversation, timeConversationWasViewed),
+    FOREIGN KEY (user) REFERENCES Users(uuid)
+        MATCH FULL ON UPDATE CASCADE ON DELETE CASCADE,
+    FOREIGN KEY (conversation) REFERENCES Conversations(uuid)
+        MATCH FULL ON UPDATE CASCADE ON DELETE CASCADE
+);
+
 # Create the posts table
 CREATE TABLE Posts (
     conversation BIGINT NOT NULL,
