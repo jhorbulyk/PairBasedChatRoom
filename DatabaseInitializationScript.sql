@@ -108,22 +108,6 @@ ADD CONSTRAINT category
  REFERENCES Categories(uuid)
  ON DELETE CASCADE
  ON UPDATE CASCADE;
-# Create the Topics table
-CREATE TABLE Topics (
-    category BIGINT NOT NULL,
-    statementA TEXT NOT NULL,
-    statementB TEXT NOT NULL,
-    PRIMARY KEY (category)
-);
-#Add foreign key for category in Topics
-ALTER TABLE Topics
- ADD INDEX category (category ASC);
-ALTER TABLE Topics 
-ADD CONSTRAINT category
- FOREIGN KEY (category)
- REFERENCES Categories(uuid)
- ON DELETE CASCADE
- ON UPDATE CASCADE;
 # Create the SuggestionToChange table
 CREATE TABLE SuggestionToChanges (
     uuid BIGINT NOT NULL PRIMARY KEY,
