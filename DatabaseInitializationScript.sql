@@ -140,6 +140,20 @@ ALTER TABLE UserVotes
   ADD INDEX suggestionToChangeFk (suggestionToChange ASC),
   ADD INDEX userFk (user ASC);
 
+# Create Change Comments Table
+CREATE TABLE ChangeComments(
+    suggestionToChangeConversation BIGINT NOT NULL,
+    creationTime TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    postContent TEXT NOT NULL,
+    postedBy BIGINT NOT NULL,
+    flaggedAsAbusive BOOL NOT NULL DEFAULT 0,
+    PRIMARY KEY (suggestionToChangeConversation, creationTime),
+    FOREIGN KEY (suggestionToChangeConversation) REFERENCES SuggestionToChange(uuid)
+        MATCH FULL ON UPDATE CASCADE ON DELETE CASCADE
+    FOREIGN KEY (postedBy) REFERENCES Users(uuid)
+        MATCH FULL ON UPDATE CASCADE ON DELETE CASCADE
+);
+
 ######################################################
 # Triggers to handle integrety constraints on updates and insertions
 ######################################################
