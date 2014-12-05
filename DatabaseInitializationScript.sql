@@ -152,6 +152,17 @@ CREATE TABLE ChangeComments(
         MATCH FULL ON UPDATE CASCADE ON DELETE CASCADE
 );
 
+# Create Conversations Table
+CREATE TABLE Conversations(
+    id BIGINT NOT NULL UNIQUE AUTO_INCREMENT PRIMARY KEY,
+    topic BIGINT NOT NULL,
+	positionAUser BIGINT NOT NULL,
+	positionBUser BIGINT NOT NULL,
+    FOREIGN KEY (topic) REFERENCES Topics(category),
+    FOREIGN KEY (positionAUser) REFERENCES Users(id),
+	FOREIGN KEY (positionBUser) REFERENCES Users(id)
+);
+
 ######################################################
 # Triggers to handle integrety constraints on updates and insertions
 ######################################################
@@ -191,6 +202,32 @@ CREATE TRIGGER UpdateUser BEFORE UPDATE ON Users
 FOR EACH ROW
 BEGIN 
     CALL ValidateUser(NEW.email, NEW.password, NEW.username);
+END;
+//
+DELIMITER ;
+
+# On Creation
+DELIMITER //
+CREATE TRIGGER CreateNewConversation BEFORE INSERT ON Conversations
+FOR EACH ROW
+BEGIN 
+    If (NEW.positionAUser=NEW.positionBUser) THEN
+        SIGNAL SQLSTATE '45000' 
+            SET MESSAGE_TEXT = 'positions cannot equal';
+    END IF; 
+END;
+//
+DELIMITER ;
+
+# On update.
+DELIMITER //
+CREATE TRIGGER UpdateConversation BEFORE UPDATE ON Conversations
+FOR EACH ROW
+BEGIN 
+    If (NEW.positionAUser=NEW.positionBUser) THEN
+        SIGNAL SQLSTATE '45000' 
+            SET MESSAGE_TEXT = 'positions cannot equal';
+    END IF; 
 END;
 //
 DELIMITER ;
