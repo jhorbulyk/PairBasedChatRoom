@@ -1,4 +1,8 @@
 <?php
+    session_start();
+?>
+
+<?php
 
 include 'sqlconnect.php';
 $conn = connectDB();
@@ -10,6 +14,7 @@ $sql->execute();
 if($sql->error) {
     echo $sql->error;
 } else {
+    $_SESSION["userId"] = $sql->insert_id;
     echo "User created successfully.";
 }
 
