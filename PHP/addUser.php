@@ -4,23 +4,7 @@
 
 <?php
 
-//connecting to the database 
-function connectDB() {
-    $servername = "localhost";
-	$username = "root";
-	$password = "tester";
-	$dbname = "PairBasedChatRoom";
-
-	// Create connection
-	$conn = new mysqli($servername, $username, $password, $dbname);
-	// Check connection
-	if ($conn->connect_error) {
-		die("Connection failed: " . $conn->connect_error);
-	}
-	
-	return $conn;
-}
-
+include 'sqlconnect.php';
 $conn = connectDB();
 $sql = "INSERT INTO Users (password, email,username)
 VALUES ('Simon','sluo@hotmail.com','sluo')";
