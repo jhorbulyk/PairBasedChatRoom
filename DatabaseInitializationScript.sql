@@ -196,7 +196,7 @@ DELIMITER ;
 
 # On Topic Creation
 DELIMITER //
-CREATE TRIGGER CreateNewTopic BEFORE INSERT ON Users
+CREATE TRIGGER CreateNewTopic BEFORE INSERT ON Topics 
 FOR EACH ROW
 BEGIN 
     CALL ValidateTopic(NEW.name, NEW.statementA, NEW.statementB);
@@ -206,7 +206,7 @@ DELIMITER ;
 
 # On Topic update.
 DELIMITER //
-CREATE TRIGGER UpdateTopic BEFORE UPDATE ON Users
+CREATE TRIGGER UpdateTopic BEFORE UPDATE ON Topics 
 FOR EACH ROW
 BEGIN 
     CALL ValidateTopic(NEW.name, NEW.statementA, NEW.statementB);
