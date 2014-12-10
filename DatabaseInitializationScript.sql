@@ -25,6 +25,18 @@ END;
 //
 DELIMITER ;
 
+# Ensure exactly one is NULL.
+DELIMITER //
+CREATE PROCEDURE EnsureOneIsNull (id1 BIGINT, id2 BIGINT, message VARCHAR(255))
+BEGIN
+    If (id1 IS NULL XOR id2 IS NULL) THEN
+        SIGNAL SQLSTATE '45000' 
+            SET MESSAGE_TEXT = message;
+    END IF; 
+END;
+//
+DELIMITER ;
+
 ######################################################
 # Create the tables
 #######################################################
@@ -78,21 +90,26 @@ ADD CONSTRAINT category
  REFERENCES Categories(id)
  ON DELETE CASCADE
  ON UPDATE CASCADE;
+
+
 # Create the SuggestionToChange table
-CREATE TABLE SuggestionToChanges (
-    id BIGINT NOT NULL PRIMARY KEY AUTO_INCREMENT,
-    categoryToChange BIGINT NOT NULL,
-    newParent BIGINT NOT NULL,
-    votesFavor INT NOT NULL,
-    votesAgainst INT NOT NULL,
-    votesTotal INT NOT NULL,
-    CONSTRAINT itemToMove FOREIGN KEY (id)
+CREATE TABLE SuggestionsToChange (
+    id BIGINT NOT NULL UNIQUE AUTO_INCREMENT,
+    categoryToMove BIGINT,
+    topicToMove BIGINT,
+    newCategory BIGINT NOT NULL,
+    CONSTRAINT ctm FOREIGN KEY (categoryToMove)
         REFERENCES Categories (id)
+        ON DELETE CASCADE ON UPDATE CASCADE,
+    CONSTRAINT tmp FOREIGN KEY (topicToMove) 
+        REFERENCES Topics(id)
         ON DELETE CASCADE ON UPDATE CASCADE,
     CONSTRAINT newCategory FOREIGN KEY (id)
         REFERENCES Categories (id)
         ON DELETE CASCADE ON UPDATE CASCADE
 );
+
+
 # Create the UserVotes table
 CREATE TABLE UserVotes (
     user BIGINT NOT NULL AUTO_INCREMENT,
@@ -102,7 +119,7 @@ CREATE TABLE UserVotes (
 );
 ALTER TABLE UserVotes
   ADD CONSTRAINT suggestionToChangeFk FOREIGN KEY (suggestionToChange)
-  REFERENCES SuggestionToChanges(id)
+  REFERENCES SuggestionsToChange(id)
   ON DELETE NO ACTION ON UPDATE NO ACTION, 
   ADD CONSTRAINT userFk FOREIGN KEY (user)
   REFERENCES Users(id)
@@ -118,7 +135,7 @@ CREATE TABLE ChangeComments(
     postedBy BIGINT NOT NULL,
     flaggedAsAbusive BOOL NOT NULL DEFAULT 0,
     PRIMARY KEY (suggestionToChangeConversation, creationTime),
-    FOREIGN KEY (suggestionToChangeConversation) REFERENCES SuggestionToChanges(id)
+    FOREIGN KEY (suggestionToChangeConversation) REFERENCES SuggestionsToChange(id)
         MATCH FULL ON UPDATE CASCADE ON DELETE CASCADE,
     FOREIGN KEY (postedBy) REFERENCES Users(id)
         MATCH FULL ON UPDATE CASCADE ON DELETE CASCADE
@@ -190,6 +207,15 @@ BEGIN
     CALL EnsureNonEmpty(name, 'Topic name can not be empty.');
     CALL EnsureNonEmpty(statementA, 'The statement for side A can not be empty.');
     CALL EnsureNonEmpty(statementB, 'The statement for side B can not be empty.');
+END;
+//
+DELIMITER ;
+
+# Ensure validity of ChangeCategorySuggestion 
+DELIMITER //
+CREATE PROCEDURE ValidateCategoryChangeSuggestion (categoryToMove BIGINT, topicToMove BIGINT)
+BEGIN
+    CALL EnsureOneIsNull(categoryToMove, topicToMove, 'Exactly one of categoryToMove and topicToMove must be NULL.');
 END;
 //
 DELIMITER ;
@@ -275,6 +301,26 @@ BEGIN
         SIGNAL SQLSTATE '45000' 
             SET MESSAGE_TEXT = 'positions cannot equal';
     END IF; 
+END;
+//
+DELIMITER ;
+
+# On create SuggestionToChange
+DELIMITER //
+CREATE TRIGGER CreateSuggestionToChange BEFORE INSERT ON SuggestionsToChange 
+FOR EACH ROW
+BEGIN 
+    CALL EnsureOneNotNull(NEW.categoryToMove, NEW.topicToMove);
+END;
+//
+DELIMITER ;
+
+# On update SuggestionToChange
+DELIMITER //
+CREATE TRIGGER UpdateSuggestionToChange BEFORE UPDATE ON SuggestionsToChange 
+FOR EACH ROW
+BEGIN 
+    CALL EnsureOneNotNull(NEW.categoryToMove, NEW.topicToMove);
 END;
 //
 DELIMITER ;
