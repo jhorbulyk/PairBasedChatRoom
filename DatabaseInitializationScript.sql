@@ -149,13 +149,13 @@ CREATE TABLE ConversationsViewedByUserTracker (
 
 # Create the posts table
 CREATE TABLE Posts (
+	id BIGINT NOT NULL UNIQUE AUTO_INCREMENT PRIMARY KEY,
     conversation BIGINT NOT NULL,
     creationTime TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
     postContent TEXT NOT NULL,
     postedBySideA BOOL NOT NULL,
     seenByOtherUser BOOL NOT NULL DEFAULT 0,
     flaggedAsAbusive BOOL NOT NULL DEFAULT 0,
-    PRIMARY KEY (conversation, creationTime, postedBySideA),
     FOREIGN KEY (conversation) REFERENCES Conversations(id) 
         MATCH FULL ON UPDATE CASCADE ON DELETE CASCADE
 );
