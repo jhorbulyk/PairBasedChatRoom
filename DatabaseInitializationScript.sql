@@ -60,12 +60,14 @@ ADD CONSTRAINT parent
  REFERENCES Categories(id)
  ON DELETE CASCADE
  ON UPDATE CASCADE;
+
 # Create the Topics table
 CREATE TABLE Topics (
-    category BIGINT NOT NULL,
-    statementA TEXT NOT NULL,
-    statementB TEXT NOT NULL,
-    PRIMARY KEY (category)
+    id BIGINT NOT NULL UNIQUE AUTO_INCREMENT PRIMARY KEY,
+    name VARCHAR(255) NOT NULL UNIQUE,
+    category BIGINT,
+    statementA VARCHAR(255) NOT NULL,
+    statementB VARCHAR(255) NOT NULL
 );
 #Add foreign key for category
 ALTER TABLE Topics
@@ -162,7 +164,7 @@ CREATE TABLE Posts (
 # Triggers to handle integrety constraints on updates and insertions
 ######################################################
 
-# Ensure validity
+# Ensure validity of Users
 DELIMITER //
 CREATE PROCEDURE ValidateUser (email VARCHAR(255), password VARCHAR(255), username VARCHAR(255))
 BEGIN
@@ -181,7 +183,37 @@ END;
 //
 DELIMITER ;
 
-# On Creation
+# Ensure validity of Topic
+DELIMITER //
+CREATE PROCEDURE ValidateTopic (name VARCHAR(255), statementA VARCHAR(255), statementB VARCHAR(255))
+BEGIN
+    CALL EnsureNonEmpty(NEW.name, 'Topic name can not be empty.');
+    CALL EnsureNonEmpty(NEW.statementA, 'The statement for side A can not be empty.');
+    CALL EnsureNonEmpty(NEW.statementB, 'The statement for side B can not be empty.');
+END;
+//
+DELIMITER ;
+
+# On Topic Creation
+DELIMITER //
+CREATE TRIGGER CreateNewTopic BEFORE INSERT ON Users
+FOR EACH ROW
+BEGIN 
+    CALL ValidateTopic(NEW.name, NEW.statementA, NEW.statementB);
+END;
+//
+DELIMITER ;
+
+# On Topic update.
+DELIMITER //
+CREATE TRIGGER UpdateTopic BEFORE UPDATE ON Users
+FOR EACH ROW
+BEGIN 
+    CALL ValidateTopic(NEW.name, NEW.statementA, NEW.statementB);
+END;
+//
+
+# On User Creation
 DELIMITER //
 CREATE TRIGGER CreateNewUser BEFORE INSERT ON Users
 FOR EACH ROW
@@ -191,7 +223,7 @@ END;
 //
 DELIMITER ;
 
-# On update.
+# On User update.
 DELIMITER //
 CREATE TRIGGER UpdateUser BEFORE UPDATE ON Users
 FOR EACH ROW
