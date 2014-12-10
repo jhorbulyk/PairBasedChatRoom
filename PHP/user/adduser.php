@@ -4,7 +4,7 @@
 
 <?php
 
-include 'sqlconnect.php';
+include '../common/sqlconnect.php';
 $conn = connectDB();
 $sql = $conn->prepare('INSERT INTO Users (username,email,password) VALUES (?,?,?)');
 
