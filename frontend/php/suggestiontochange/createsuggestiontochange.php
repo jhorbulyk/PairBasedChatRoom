@@ -2,12 +2,20 @@
 include '../common/sqlconnect.php';
 $conn = connectDB();
 
-if($_POST["newCategory"] != 0) {
-    $sql = $conn->prepare('INSERT INTO SuggestionsToChange(categoryToMove, topicToMove, newCategory) VALUES (?,?,?)');
-    $sql->bind_param('ddd', $_POST["categoryToMove"],$_POST["topicToMove"], $_POST["newCategory"]);
+if($_POST["categoryToMove"]) {
+    $insertInto = "categoryToMove";
+    $insertValue = $_POST["categoryToMove"];
 } else {
-    $sql = $conn->prepare('INSERT INTO SuggestionsToChange(categoryToMove, topicToMove, newCategory) VALUES (?,?, NULL)');
-    $sql->bind_param('dd', $_POST["categoryToMove"],$_POST["topicToMove"]);
+    $insertInto = "topicToMove";
+    $insertValue = $_POST["topicToMove"];
+}
+
+if($_POST["newCategory"]) {
+    $sql = $conn->prepare("INSERT INTO SuggestionsToChange($insertInto, newCategory) VALUES (?,?)");
+    $sql->bind_param('dd', $insertValue, $_POST["newCategory"]);
+} else {
+    $sql = $conn->prepare("INSERT INTO SuggestionsToChange($insertInto) VALUES (?)");
+    $sql->bind_param('d', $insertValue);
 }
 $sql->execute();
 

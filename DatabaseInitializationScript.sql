@@ -29,9 +29,29 @@ DELIMITER ;
 DELIMITER //
 CREATE PROCEDURE EnsureOneIsNull (id1 BIGINT, id2 BIGINT, message VARCHAR(255))
 BEGIN
-    If (id1 IS NULL XOR id2 IS NULL) THEN
+    If (id1 > 0 XOR id2 > 0) THEN
         SIGNAL SQLSTATE '45000' 
             SET MESSAGE_TEXT = message;
+    END IF; 
+END;
+//
+DELIMITER ;
+
+# Ensure two are not equal (including NULLS)
+DELIMITER //
+CREATE FUNCTION Same (id1 BIGINT, id2 BIGINT)
+RETURNS BOOL
+BEGIN
+    If (id1 > 0 AND id2 > 0) THEN
+        if(id1 = id2) THEN
+            RETURN 1;
+        ELSE
+            RETURN 0;
+        END IF;
+    ELSEIF (id1 > 0 OR id2 > 0) THEN
+        RETURN 0;
+    ELSE
+        RETURN 1;
     END IF; 
 END;
 //
@@ -97,7 +117,7 @@ CREATE TABLE SuggestionsToChange (
     id BIGINT NOT NULL UNIQUE AUTO_INCREMENT,
     categoryToMove BIGINT,
     topicToMove BIGINT,
-    newCategory BIGINT NOT NULL,
+    newCategory BIGINT,
     CONSTRAINT ctm FOREIGN KEY (categoryToMove)
         REFERENCES Categories (id)
         ON DELETE CASCADE ON UPDATE CASCADE,
@@ -221,21 +241,16 @@ BEGIN
         SIGNAL SQLSTATE '45000' 
             SET MESSAGE_TEXT = "Can not move category to itself.";
     END IF;
-    IF(categoryToMove > 0) THEN
-        SELECT parent INTO oldParent FROM Categories WHERE id = categoryToMove;
-        IF(oldParent = newCategory) THEN
+
+    IF (categoryToMove > 0) THEN
+        SELECT parent INTO oldParent FROM Categories WHERE id = categoryToMove;    
+        IF(Same(oldParent, categoryToMove)) THEN
             SIGNAL SQLSTATE '45000' 
                 SET MESSAGE_TEXT = "Old parent and new parent are the same.";
-        END IF; 
+        END IF;
     END IF;
-    
-    IF(topicToMove > 0) THEN
-        SELECT category INTO oldParent FROM Topics WHERE id = topicToMove;
-        IF(oldParent = newCategory) THEN
-            SIGNAL SQLSTATE '45000' 
-                SET MESSAGE_TEXT = "Old parent and new parent are the same.";
-        END IF; 
-    END IF;
+
+
 END;
 //
 DELIMITER ;
@@ -330,7 +345,7 @@ DELIMITER //
 CREATE TRIGGER CreateSuggestionToChange BEFORE INSERT ON SuggestionsToChange 
 FOR EACH ROW
 BEGIN 
-    CALL EnsureOneNotNull(NEW.categoryToMove, NEW.topicToMove);
+    CALL ValidateCategoryChangeSuggestion(NEW.categoryToMove, NEW.topicToMove, NEW.newCategory);
 END;
 //
 DELIMITER ;
@@ -340,7 +355,7 @@ DELIMITER //
 CREATE TRIGGER UpdateSuggestionToChange BEFORE UPDATE ON SuggestionsToChange 
 FOR EACH ROW
 BEGIN 
-    CALL EnsureOneNotNull(NEW.categoryToMove, NEW.topicToMove);
+    CALL ValidateCategoryChangeSuggestion(NEW.categoryToMove, NEW.topicToMove, NEW.newCategory);
 END;
 //
 DELIMITER ;
