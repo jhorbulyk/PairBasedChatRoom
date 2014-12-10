@@ -13,35 +13,39 @@ include 'sqlconnect.php';
 $conn = connectDB();
 $userid =$_SESSION["userId"];
 $total = 0;
-$sql = $conn->prepare('SELECT Conversations.id FROM Conversations 
+$sql = $conn->prepare('SELECT Count(*) FROM Conversations 
 INNER JOIN Posts 
 ON  Conversations.id = Posts.id WHERE Conversations.positionAUser=? AND Posts.postedBySideA=0 AND Posts.seenByOtherUser=0');
 $sql->bind_param('i',userid);
 $sql->execute();
 
-$sql->bind_result($id);
-
 if($sql->error) {
     echo $sql->error;
 } 
 
-$total += count($id);
+$sql->bind_result($count);
+while ($sql->fetch()) {
+	$total +=$count;
+}
 
 $conn->close();
 
 $conn = connectDB();
-$sql = $conn->prepare('SELECT Conversations.id FROM Conversations 
+$sql = $conn->prepare('SELECT Count(*) FROM Conversations 
 INNER JOIN Posts 
 ON  Conversations.id = Posts.id WHERE Conversations.positionBUser=? AND Posts.postedBySideA=1 AND Posts.seenByOtherUser=0');
 $sql->bind_param('i',userid);
 $sql->execute();
 
-$sql->bind_result($id2);
-
 if($sql->error) {
     echo $sql->error;
 } 
-$total += count($id2);
+
+$sql->bind_result($count2);
+while ($sql->fetch()) {
+	$total +=$count2;
+}
+
 $conn->close();
 ?>
 </html>
