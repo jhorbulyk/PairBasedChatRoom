@@ -187,9 +187,9 @@ DELIMITER ;
 DELIMITER //
 CREATE PROCEDURE ValidateTopic (name VARCHAR(255), statementA VARCHAR(255), statementB VARCHAR(255))
 BEGIN
-    CALL EnsureNonEmpty(NEW.name, 'Topic name can not be empty.');
-    CALL EnsureNonEmpty(NEW.statementA, 'The statement for side A can not be empty.');
-    CALL EnsureNonEmpty(NEW.statementB, 'The statement for side B can not be empty.');
+    CALL EnsureNonEmpty(name, 'Topic name can not be empty.');
+    CALL EnsureNonEmpty(statementA, 'The statement for side A can not be empty.');
+    CALL EnsureNonEmpty(statementB, 'The statement for side B can not be empty.');
 END;
 //
 DELIMITER ;
