@@ -213,9 +213,29 @@ DELIMITER ;
 
 # Ensure validity of ChangeCategorySuggestion 
 DELIMITER //
-CREATE PROCEDURE ValidateCategoryChangeSuggestion (categoryToMove BIGINT, topicToMove BIGINT)
+CREATE PROCEDURE ValidateCategoryChangeSuggestion (categoryToMove BIGINT, topicToMove BIGINT, newCategory BIGINT)
 BEGIN
+    DECLARE oldParent BIGINT DEFAULT 0;
     CALL EnsureOneIsNull(categoryToMove, topicToMove, 'Exactly one of categoryToMove and topicToMove must be NULL.');
+    If(categoryToMove = newCategory) THEN
+        SIGNAL SQLSTATE '45000' 
+            SET MESSAGE_TEXT = "Can not move category to itself.";
+    END IF;
+    IF(categoryToMove > 0) THEN
+        SELECT parent INTO oldParent FROM Categories WHERE id = categoryToMove;
+        IF(oldParent = newCategory) THEN
+            SIGNAL SQLSTATE '45000' 
+                SET MESSAGE_TEXT = "Old parent and new parent are the same.";
+        END IF; 
+    END IF;
+    
+    IF(topicToMove > 0) THEN
+        SELECT category INTO oldParent FROM Topics WHERE id = topicToMove;
+        IF(oldParent = newCategory) THEN
+            SIGNAL SQLSTATE '45000' 
+                SET MESSAGE_TEXT = "Old parent and new parent are the same.";
+        END IF; 
+    END IF;
 END;
 //
 DELIMITER ;
