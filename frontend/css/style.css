@@ -1,0 +1,32 @@
+body {
+  padding-top: 50px;
+}
+.wrapper {
+  padding: 40px 15px;
+  text-align: center;
+}
+.chatbox {
+  height: 300px;
+  overflow-y: auto;
+  text-align: left;
+}
+.breadcrumb {
+  text-align: left;
+}
+.md {
+  font-size: small;
+}
+.buttons li {
+  display: inline-block;
+  padding-right: 4px;
+  line-height: 1.6em;
+  font-size: x-small
+}
+.flat-list {
+  list-style-type: none;
+  padding: 0px;
+}
+.flat-list li {
+  display: inline;
+  white-space: nowrap;
+}
