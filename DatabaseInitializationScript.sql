@@ -15,7 +15,7 @@ USE PairBasedChatRoom;
 
 # Ensure string is non-empty
 DELIMITER //
-CREATE PROCEDURE EnsureNonEmpty (string VARCHAR(20), message VARCHAR(255))
+CREATE PROCEDURE EnsureNonEmpty (string VARCHAR(255), message VARCHAR(255))
 BEGIN
     If (LENGTH(string) = 0) THEN
         SIGNAL SQLSTATE '45000' 
@@ -32,9 +32,9 @@ DELIMITER ;
 # Create the USERS table
 CREATE TABLE Users (
     id BIGINT NOT NULL UNIQUE AUTO_INCREMENT PRIMARY KEY,
-    email VARCHAR(20) NOT NULL UNIQUE,
-    password VARCHAR(20) NOT NULL,
-    username VARCHAR(20) NOT NULL UNIQUE
+    email VARCHAR(255) NOT NULL UNIQUE,
+    password VARCHAR(255) NOT NULL,
+    username VARCHAR(255) NOT NULL UNIQUE
 );
 
 ######################################################
@@ -164,7 +164,7 @@ CREATE TABLE Posts (
 
 # Ensure validity
 DELIMITER //
-CREATE PROCEDURE ValidateUser (email VARCHAR(20), password VARCHAR(20), username VARCHAR(20))
+CREATE PROCEDURE ValidateUser (email VARCHAR(255), password VARCHAR(255), username VARCHAR(255))
 BEGIN
     # Reject empty passwords
     CALL EnsureNonEmpty(password, 'Password can not be empty.');
@@ -173,7 +173,7 @@ BEGIN
     CALL EnsureNonEmpty(username, 'Username can not be empty.');
     
     # The email address must be valid
-    IF(email NOT REGEXP '^[[:alnum:]]+@[[:alpha:]]+[[.full-stop.]][[:alpha:]]{2,3}$') THEN
+    IF(email NOT REGEXP '^[A-Z0-9._%-]+@[A-Z0-9.-]+\.[A-Z]{2,4}$') THEN
         SIGNAL SQLSTATE '45000' 
             SET MESSAGE_TEXT = 'Email is not valid.';
     END IF;
