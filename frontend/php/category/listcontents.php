@@ -8,7 +8,7 @@ if($_POST["parent"]) {
     $sql->bind_param('ss', $_POST["parent"], $_POST["parent"]);
 } else {
     $sql = $conn->prepare(
-        'SELECT id, name, "categories" FROM Categories WHERE parent = NULL UNION SELECT id, name, "topic" FROM Topics WHERE category = NULL'
+        'SELECT id, name, "categories" FROM Categories WHERE parent IS NULL UNION SELECT id, name, "topic" FROM Topics WHERE category IS NULL'
     );
 }
 $sql->execute();
