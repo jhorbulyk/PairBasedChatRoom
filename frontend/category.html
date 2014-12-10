@@ -50,13 +50,16 @@
   <div class="container">
     <div class="wrapper">
       <ol class="breadcrumb">
-        <li class="active">Current</li>
+        <li><a href="#">Parent Category</a>
+        </li>
+        <li class="active">Current Category
+        </li>
       </ol>
       <div class="col-md-6">
         <div class="panel panel-default panel-categories">
           <!-- Default panel contents -->
           <div class="panel-heading"><span class="glyphicon glyphicon-align-justify" aria-hidden="true"></span>
-            <h3>Current Level</h3>
+            <h3 class="icon-title">Current Level</h3>
           </div>
           <div class="list-group">
             <a href="#" class="list-group-item disabled">
@@ -73,7 +76,7 @@
         <div class="panel panel-default panel-categories">
           <!-- Default panel contents -->
           <div class="panel-heading"><span class="glyphicon glyphicon-align-left" aria-hidden="true"></span>
-            <h3>Next Level</h3>
+            <h3 class="icon-title">Next Level</h3>
           </div>
           <div class="list-group">
             <a href="#" class="list-group-item disabled">
@@ -87,28 +90,14 @@
         </div>
       </div>
       <div class="col-md-12">
-        <form class="navbar-form navbar-left" role="create-topic">
-          <div class="form-group">
-            <div class="input-group">
-              <input type="text" class="form-control">
-              <span class="input-group-btn">
-                  <button class="btn btn-default" type="submit">New Topic</button>
-                  </span>
-            </div>
-            <!-- /input-group -->
-          </div>
-        </form>
-        <form class="navbar-form navbar-left" role="create-category">
-          <div class="form-group">
-            <div class="input-group">
-              <input type="text" class="form-control">
-              <span class="input-group-btn">
-                  <button class="btn btn-default" type="submit">New Category</button>
-                  </span>
-            </div>
-            <!-- /input-group -->
-          </div>
-        </form>
+        <ul class="nav nav-pills">
+          <li role="submit" class="disabled"><a href="javascript:void(0)">Submit new</a>
+          </li>
+          <li role="submit"><a href="submit.html#category">Category</a>
+          </li>
+          <li role="submit"><a href="submit.html#topic">Topic</a>
+          </li>
+        </ul>
       </div>
     </div>
 
