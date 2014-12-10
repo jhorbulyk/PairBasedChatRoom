@@ -2,9 +2,9 @@
 include '../common/sqlconnect.php';
 $conn = connectDB();
 
-if($_POST["parent"]) {
+if($_POST["category"]) {
     $sql = $conn->prepare('INSERT INTO Topics(name, statementA, statementB, category) VALUES (?,?,?,?)');
-    $sql->bind_param('sssd', $_POST["name"], $_POST["statementA"], $_POST["statementB"], $_POST["parent"]);
+    $sql->bind_param('sssd', $_POST["name"], $_POST["statementA"], $_POST["statementB"], $_POST["category"]);
 } else {
     $sql = $conn->prepare('INSERT INTO Topics(name, statementA, statementB) VALUES (?,?,?)');
     $sql->bind_param('sss', $_POST["name"], $_POST["statementA"], $_POST["statementB"]);
