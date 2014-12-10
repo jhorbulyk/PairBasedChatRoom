@@ -1,10 +1,10 @@
 <?php
 
-include 'sqlconnect.php';
+include '../common/sqlconnect.php';
 $conn = connectDB();
 $sql = $conn->prepare('UPDATE Users SET username=?,email=?,password=? WHERE id=?');
 
-include 'session.php';
+include '../common/session.php';
 $sql->bind_param('sssd', $_POST["username"],$_POST["email"],$_POST["password"],getUser());
 $sql->execute();
 
