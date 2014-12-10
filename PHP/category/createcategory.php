@@ -1,5 +1,5 @@
 <?php
-include 'sqlconnect.php';
+include '../common/sqlconnect.php';
 $conn = connectDB();
 
 if($_POST["parent"]) {
