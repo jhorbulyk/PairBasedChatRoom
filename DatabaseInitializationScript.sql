@@ -52,7 +52,7 @@ CREATE TABLE Categories (
 );
 #Add foreign key for parentCategory
 ALTER TABLE Categories 
-ADD COLUMN parent BIGINT NOT NULL,
+ADD COLUMN parent BIGINT,
 ADD INDEX parentIdx (parent ASC);
 ALTER TABLE Categories 
 ADD CONSTRAINT parent
@@ -197,6 +197,26 @@ CREATE TRIGGER UpdateUser BEFORE UPDATE ON Users
 FOR EACH ROW
 BEGIN 
     CALL ValidateUser(NEW.email, NEW.password, NEW.username);
+END;
+//
+DELIMITER ;
+
+# On Category Creation
+DELIMITER //
+CREATE TRIGGER CreateCategory BEFORE INSERT ON Categories 
+FOR EACH ROW
+BEGIN 
+    CALL EnsureNonEmpty(NEW.name, 'Category name can not be empty.');
+END;
+//
+DELIMITER ;
+
+# On Category Update 
+DELIMITER //
+CREATE TRIGGER UpdateCategory BEFORE UPDATE ON Categories 
+FOR EACH ROW
+BEGIN 
+    CALL EnsureNonEmpty(NEW.name, 'Category name can not be empty.');
 END;
 //
 DELIMITER ;
