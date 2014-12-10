@@ -235,7 +235,6 @@ DELIMITER ;
 DELIMITER //
 CREATE PROCEDURE ValidateCategoryChangeSuggestion (categoryToMove BIGINT, topicToMove BIGINT, newCategory BIGINT)
 BEGIN
-    DECLARE oldParent BIGINT DEFAULT 0;
     CALL EnsureOneIsNull(categoryToMove, topicToMove, 'Exactly one of categoryToMove and topicToMove must be NULL.');
     If(categoryToMove = newCategory) THEN
         SIGNAL SQLSTATE '45000' 
@@ -243,7 +242,7 @@ BEGIN
     END IF;
 
     IF (categoryToMove > 0) THEN
-        SELECT parent INTO oldParent FROM Categories WHERE id = categoryToMove;    
+        SELECT parent INTO @oldParent FROM Categories WHERE id = categoryToMove;    
         IF(Same(oldParent, categoryToMove)) THEN
             SIGNAL SQLSTATE '45000' 
                 SET MESSAGE_TEXT = "Old parent and new parent are the same.";
