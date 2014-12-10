@@ -4,7 +4,7 @@
 
 <?php
 
-include 'sqlconnect.php';
+include '../common/sqlconnect.php';
 $conn = connectDB();
 $sql = $conn->prepare('SELECT id, email, password FROM Users WHERE email = ? AND password=?');
 $sql->bind_param('ss', $_POST["email"], $_POST["password"]);
