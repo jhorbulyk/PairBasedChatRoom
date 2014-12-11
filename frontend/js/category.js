@@ -39,9 +39,9 @@ function createBreadcrumb(id, name, enable) {
 function createList(obj, id, name, enable, type) {
   if (type == "topic") {
     if (enable == true) {
-      obj.prepend("<a href=chat.html?id=" + id + " class=\"list-group-item\">" + name + "<span class=\"badge\">" + type + "</span></a>");
+      obj.prepend("<a href=chat.html?id=" + id + " class=\"list-group-item\">" + name + "<span class=\"badge\">" + type + "</span><div class=\"list-group-item-text\"><form id=\"join-conversation\" action=\"/chatroom/php/conversations/createconversation.php\" method=\"post\"><input type=\"hidden\"  name=\"topic\" value=\""+ id +"\"/><div class=\"btn-group\" role=\"group\" aria-label=\"...\"><button type=\"submit\" name=\"side\" value=\"A\" class=\"btn btn-default\">A</button><button type=\"submit\" name=\"side\" value=\"B\" class=\"btn btn-default\">B</button></div></form></div></a>");
     } else {
-      obj.prepend("<a href=?chat.html=" + id + " class=\"list-group-item disabled\">" + name + "<span class=\"badge\">" + type + "</span></a>");
+      obj.prepend("<a href=?chat.html=" + id + " class=\"list-group-item disabled\">" + name + "<span class=\"badge\">" + type + "</span><div class=\"list-group-item-text\"><form action=\"\"><div class=\"btn-group\" role=\"group\" aria-label=\"...\"><button type=\"button\" class=\"btn btn-default\">A</button><button type=\"button\" class=\"btn btn-default\">B</button></div></form></div></a>");
     }
   } else {
     if (enable == true) {
