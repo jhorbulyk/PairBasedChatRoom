@@ -28,6 +28,23 @@ $(function () {
   });
 })
 
+$("#join-conversation").submit(function (event) {
+  event.preventDefault();
+  var form = $(this);
+  $('<input />').attr('type', 'hidden')
+          .attr('name', "isPositionA")
+          .attr('value', true)
+          .appendTo('#join-conversation');
+  var data = form.serialize();
+  console.log(data);
+  var url = "chat.html?id=" + $("#join-conversation > input[name='topic']").val();
+  /*$.post(form.attr('action'), data, function () {
+
+  }).done(function () {
+    $(location).attr('href', url);
+  }).fail(function () {});*/
+});
+
 function createBreadcrumb(id, name, enable) {
   if (enable == true) {
     $(".breadcrumb").prepend("<li><a href=category.html?parent=" + id + ">" + name + "</a></li>");
