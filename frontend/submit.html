@@ -49,11 +49,7 @@
 
   <div class="container">
     <div class="wrapper">
-      <ol class="breadcrumb">
-        <li><a href="#">Parent Category</a>
-        </li>
-        <li class="active">Current Category</li>
-      </ol>
+      <ol class="breadcrumb"></ol>
       <h2>Submit to chatroom</h2>
       <!-- Nav tabs -->
       <ul class="nav nav-tabs" role="tablist">
@@ -76,7 +72,7 @@
           <div id="submitbox" style="margin-top:50px" class="mainbox col-md-6 col-md-offset-3 col-sm-8 col-sm-offset-2">
             <div class="panel panel-info">
               <div class="panel-body">
-                <form id="submitform" class="form-horizontal" role="form" action="/chatroom/php/category/createcategory.php" method="post">
+                <form id="submit-category" class="form-horizontal" role="form" action="/chatroom/php/category/createcategory.php" method="post">
                   <input type="hidden" name="parent" />
                   <div id="alert" style="display:none" class="alert alert-danger">
                     <p>Error:</p>
@@ -106,7 +102,7 @@
           <div id="submitbox" style="margin-top:50px" class="mainbox col-md-6 col-md-offset-3 col-sm-8 col-sm-offset-2">
             <div class="panel panel-info">
               <div class="panel-body">
-                <form id="submitform" class="form-horizontal" role="form" action="/chatroom/php/topic/createtopic.php" method="post">
+                <form id="submit-topic" class="form-horizontal" role="form" action="/chatroom/php/topic/createtopic.php" method="post">
                   <input type="hidden" name="parent" />
                   <div id="alert" style="display:none" class="alert alert-danger">
                     <p>Error:</p>
@@ -158,6 +154,7 @@
   <!-- Placed at the end of the document so the pages load faster -->
   <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
   <script src="/chatroom/js/bootstrap.min.js"></script>
+  <script src="/chatroom/js/jquery.cookie.js"></script>
   <script src="/chatroom/js/submit.js"></script>
 </body>
 
