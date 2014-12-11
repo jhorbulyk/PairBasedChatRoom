@@ -165,9 +165,9 @@ CREATE TABLE ChangeComments(
 CREATE TABLE Conversations(
     id BIGINT NOT NULL UNIQUE AUTO_INCREMENT PRIMARY KEY,
     topic BIGINT NOT NULL,
-	positionAUser BIGINT NOT NULL,
-	positionBUser BIGINT NOT NULL,
-    FOREIGN KEY (topic) REFERENCES Topics(category),
+	positionAUser BIGINT,
+	positionBUser BIGINT,
+    FOREIGN KEY (topic) REFERENCES Topics(id),
     FOREIGN KEY (positionAUser) REFERENCES Users(id),
 	FOREIGN KEY (positionBUser) REFERENCES Users(id)
 );
