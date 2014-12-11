@@ -22,6 +22,7 @@
       <script src="https://oss.maxcdn.com/html5shiv/3.7.2/html5shiv.min.js"></script>
       <script src="https://oss.maxcdn.com/respond/1.4.2/respond.min.js"></script>
     <![endif]-->
+<!--<?php echo isset($_GET["parent"]) ? intval($_GET["parent"]) : 0;?>-->
 </head>
 
 <body>
@@ -49,47 +50,18 @@
 
   <div class="container">
     <div class="wrapper">
-      <ol class="breadcrumb">
-        <li><a href="#">Parent Category</a>
-        </li>
-        <li class="active">Current Category
-        </li>
-      </ol>
-      <div class="col-md-6">
+      <ol class="breadcrumb"></ol>
+
+      <div class="col-md-offset-3 col-md-6">
         <div class="panel panel-default panel-categories">
           <!-- Default panel contents -->
           <div class="panel-heading"><span class="glyphicon glyphicon-align-justify" aria-hidden="true"></span>
             <h3 class="icon-title">Current Level</h3>
           </div>
-          <div class="list-group">
-            <a href="#" class="list-group-item disabled">
-    Cras justo odio
-  </a>
-            <a href="#" class="list-group-item">Dapibus ac facilisis in</a>
-            <a href="#" class="list-group-item">Morbi leo risus</a>
-            <a href="#" class="list-group-item">Porta ac consectetur ac</a>
-            <a href="#" class="list-group-item">Vestibulum at eros</a>
-          </div>
+          <div class="list-group current-level"></div>
         </div>
-      </div>
-      <div class="col-md-6">
-        <div class="panel panel-default panel-categories">
-          <!-- Default panel contents -->
-          <div class="panel-heading"><span class="glyphicon glyphicon-align-left" aria-hidden="true"></span>
-            <h3 class="icon-title">Next Level</h3>
-          </div>
-          <div class="list-group">
-            <a href="#" class="list-group-item disabled">
-    Cras justo odio
-  </a>
-            <a href="#" class="list-group-item">Dapibus ac facilisis in</a>
-            <a href="#" class="list-group-item">Morbi leo risus</a>
-            <a href="#" class="list-group-item">Porta ac consectetur ac</a>
-            <a href="#" class="list-group-item">Vestibulum at eros</a>
-          </div>
-        </div>
-      </div>
-      <div class="col-md-12">
+      </div>      
+      <div class="col-md-offset-3 col-md-6">
         <ul class="nav nav-pills">
           <li role="submit" class="disabled"><a href="javascript:void(0)">Submit new</a>
           </li>
@@ -110,7 +82,8 @@
   <!-- Placed at the end of the document so the pages load faster -->
   <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
   <script src="/chatroom/js/bootstrap.min.js"></script>
-  <script src="/chatroom/js/chat.js"></script>
+  <script src="/chatroom/js/category.js"></script>
+
 </body>
 
 </html>
