@@ -14,7 +14,7 @@ $sql->execute();
 if($sql->error) {
     echo $sql->error;
 } else {
-    echo "Topic created successfully.";
+    echo $sql->insert_id;
 }
 
 $conn->close();
