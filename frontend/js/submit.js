@@ -3,7 +3,7 @@ $(function () {
   hash && $('ul.nav a[href="' + hash + '"]').tab('show');
   var parent = (typeof $.cookie("parent") === 'undefined' || !isNumber($.cookie("parent"))) ? 0 : $.cookie("parent");
 
-  $("input[name='parent']").val(parent);
+  $(".parent").val(parent);
 
   $.post("/chatroom/php/category/breadcrumbtrail.php", {
     parent: parent
@@ -36,10 +36,10 @@ $("#submit-topic").submit(function (event) {
   event.preventDefault();
   var form = $(this);
   var data = form.serialize();
-  var url = "chat.html?parent=" + $("#submit-topic > input[name='parent']").val();
+  var url = "chat.html?id=" + $("#submit-topic > input[name='parent']").val();
   $.post(form.attr('action'), data, function () {
   }).done(function () {
-    //$(location).attr('href', url);
+    $(location).attr('href', url);
   }).fail(function () {});
 });
 

@@ -39,7 +39,7 @@
       </div>
       <div id="navbar" class="collapse navbar-collapse">
         <ul class="nav navbar-nav">
-          <li class="active"><a href="#">Home</a>
+          <li class="active"><a href="category.html">Home</a>
           </li>
         </ul>
       </div>
@@ -73,7 +73,7 @@
             <div class="panel panel-info">
               <div class="panel-body">
                 <form id="submit-category" class="form-horizontal" role="form" action="/chatroom/php/category/createcategory.php" method="post">
-                  <input type="hidden" name="parent" />
+                  <input type="hidden" class="parent" name="parent" />
                   <div id="alert" style="display:none" class="alert alert-danger">
                     <p>Error:</p>
                     <span></span>
@@ -103,7 +103,7 @@
             <div class="panel panel-info">
               <div class="panel-body">
                 <form id="submit-topic" class="form-horizontal" role="form" action="/chatroom/php/topic/createtopic.php" method="post">
-                  <input type="hidden" name="parent" />
+                  <input type="hidden" class="parent" name="category" />
                   <div id="alert" style="display:none" class="alert alert-danger">
                     <p>Error:</p>
                     <span></span>

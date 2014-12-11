@@ -23,12 +23,7 @@ $(function () {
     var data = JSON.parse(data);
     data.reverse();
     $.each(data, function (index) {
-      // leaf index as current index
-      if (index == -99) {
-        createList($(".current-level"), data[index].id, data[index].name, false, data[index].type);
-      } else {
-        createList($(".current-level"), data[index].id, data[index].name, true, data[index].type);
-      }
+      createList($(".current-level"), data[index].id, data[index].name, true, data[index].type);
     })
   });
 })
@@ -42,10 +37,18 @@ function createBreadcrumb(id, name, enable) {
 }
 
 function createList(obj, id, name, enable, type) {
-  if (enable == true) {
-    obj.prepend("<a href=?parent=" + id + " class=\"list-group-item\">" + name + "</a>");
+  if (type == "topic") {
+    if (enable == true) {
+      obj.prepend("<a href=chat.html?id=" + id + " class=\"list-group-item\">" + name + "<span class=\"badge\">" + type + "</span></a>");
+    } else {
+      obj.prepend("<a href=?chat.html=" + id + " class=\"list-group-item disabled\">" + name + "<span class=\"badge\">" + type + "</span></a>");
+    }
   } else {
-    obj.prepend("<a href=?parent=" + id + " class=\"list-group-item disabled\">" + name + "</a>");
+    if (enable == true) {
+      obj.prepend("<a href=?parent=" + id + " class=\"list-group-item\">" + name + "<span class=\"badge\">" + type + "</span></a>");
+    } else {
+      obj.prepend("<a href=?parent=" + id + " class=\"list-group-item disabled\">" + name + "<span class=\"badge\">" + type + "</span></a>");
+    }
   }
 }
 
