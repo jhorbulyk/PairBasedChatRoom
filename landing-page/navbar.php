@@ -1,0 +1,96 @@
+<?php
+function navbar()
+{
+	echo '<nav class="navbar navbar-default navbar-fixed-top" role="navigation">';
+  echo '<!-- Brand and toggle get grouped for better mobile display -->';
+  echo '<div class="navbar-header">';
+  echo '  <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1">';
+  echo ' <span class="sr-only">Toggle navigation</span>';
+  echo ' <span class="icon-bar"></span>';
+   echo '   <span class="icon-bar"></span>';
+    echo '  <span class="icon-bar"></span>';
+   echo '</button>';
+   echo ' <a class="navbar-brand" href="#">Bootstrap Landing</a>';
+  echo '</div>';
+
+  echo '<!-- Collect the nav links, forms, and other content for toggling -->';
+  echo '<div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1\">';
+  echo '<ul class="nav navbar-nav navbar-right">';
+  echo '    <li><a href="#" class="scroll-link" data-id="home">Home</a></li>';
+  echo '    <li><a href="#" class="scroll-link" data-id="about">About Us</a></li>';
+  echo '    <li><a href="#" class="scroll-link" data-id="services">Services</a></li>';
+  echo '    <li><a href="#" class="scroll-link" data-id="contact">Contact Us</a></li>';
+  echo '    <li><a style="cursor:pointer;" id="loginpopup">Login / Signup</a></li>';
+  echo '    <li class="dropdown">';
+  echo '      <a href="#" class="dropdown-toggle" data-toggle="dropdown">Welcome <strong>Guest</strong> <b class="caret"></b></a>';
+  echo '      <ul class="dropdown-menu">';
+  echo '        <li><a href="#">My Account</a></li>';
+  echo '        <li><a href="#">Transactions</a></li>';
+  echo '        <li class="divider"></li>';
+  echo '        <li><a href="#">Logout</a></li>';
+  echo '      </ul>';
+  echo '    </li>';
+  echo '  </ul>';
+ echo ' </div><!-- /.navbar-collapse -->';
+ echo ' </nav>';
+echo '  <!-- Code for Login / Signup Popup -->';
+echo '  <!-- Modal Log in -->';
+echo '	<div class="modal fade" id="login" tabindex="-1" role="dialog" aria-labelledby="myModalLabel1" aria-hidden="true">';
+echo '	  <div class="modal-dialog" style="margin-top: 150px;">';
+echo '	    <div class="modal-content">';
+echo '	      <div class="modal-header">';
+echo '	        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>';
+echo '	        <h4 class="modal-title" id="myModalLabel1">Login</h4>';
+echo '	      </div>';
+echo '	      <div class="modal-body" id="login_details">';
+echo '	        <span> Already have an account? </span> </br></br>';
+echo '			<form id="loginForm" method="post" action="login.php"> 	';
+echo '	        *<span style="font-weight:bold;">Your Email</span><br />';
+echo '	        <input type="text" placeholder="example@gmail.com" name="email" /><br /></br>';
+echo '	        *<span style="font-weight:bold;" >Password</span><br />';
+echo '	        <input type="password" placeholder="Password" name="password" /><br />';
+echo '			</br>';
+echo '			<button type="submit" class="btn btn-success">Login</button>';
+echo '	       </br></br>';
+echo '			</form>';
+echo '	      </div>';
+
+echo '	      <div class="modal-footer" >';
+
+echo '			<span> Not a member yet?</span>';
+echo '			<span id="signup-link" style="cursor:pointer;" class="text-info">Sign Up!</span>';
+echo '	      </div>';
+echo '	    </div><!-- /.modal-content -->';
+echo '	  </div><!-- /.modal-dialog -->';
+echo '	</div><!-- /.modal -->';
+echo '  <!--Modal Login Ends -->';
+ echo ' <!-- Modal Sign-up Starts -->';
+echo '	<div class="modal fade" id="signup" tabindex="-1" role="dialog" aria-labelledby="myModalLabel2" aria-hidden="true">';
+echo '	  <div class="modal-dialog" style="margin-top: 100px;">';
+echo '	    <div class="modal-content">';
+echo '	      <div class="modal-header">';
+echo '	        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>';
+echo '	        <h4 class="modal-title" id="myModalLabel2">Sign Up</h4>';
+echo '	      </div>';
+echo '	      <div class="modal-body" id="signup_details">';
+echo '		  <form id="sinupform" method="post" action="adduser.php"> ';
+echo '	        <span >Username</span>';
+echo '	        <input type="text" placeholder="Username" name="username" /> </br></br>';
+echo '	        *<span >Email</span>';
+echo '	        <input type="text" placeholder="example@gmail.com" name="email" /></br></br>';
+echo '	        *<span >Password</span>';
+echo '	        <input type="password" placeholder="Password" name="password" /></br></br>';
+echo '			<button type="submit" class="btn btn-success">Sign up</button>';
+echo '			</br>';
+echo '		</form>';
+echo '	      </div>';
+echo '	      <div class="modal-footer" >';
+echo '	       <span>&nbsp;&nbsp;&nbsp; Already a member? </span><span id="login-link" class="text-info" style="cursor:pointer;">  Login now  </span> ';
+echo '		 </div>';
+echo '	    </div><!-- /.modal-content -->';
+echo '	  </div><!-- /.modal-dialog -->';
+echo '	</div><!-- /.modal -->';
+ echo ' <!-- Modal Sign up ends! -->';
+ echo ' <!-- End code for Login / Signup Popup -->';
+ }
+ ?>
